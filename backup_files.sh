@@ -4,11 +4,12 @@
 
 set -eu
 
-lock_file_name="${0}_lock"
-lock_file="/tmp/${lock_file_name}"
+lock_file_name="${0}.lock"
+lock_file_path="/var/lock/"
+lock_file="${lock_file_path}${lock_file_name}"
 backup_dir="${1}"
-backup_file="backup.tar.gz"
-backup_name="$(date +%F-%H-%M)"."${backup_file}"
+backup_file_name="backup.tar.gz"
+backup_name_full_name="$(date +%F-%H-%M)"."${backup_file_name}"
 
 
 function is_running() {
@@ -34,7 +35,7 @@ function delete_lock_file() {
 
 
 function handle_overwrite() {
-    if [[ -e "${backup_name}" ]]; then
+    if [[ -e "${backup_name_full_name}" ]]; then
         printf "Found copy of backup file.\nExiting.\n" >&2
         delete_lock_file
         exit 5
@@ -42,7 +43,7 @@ function handle_overwrite() {
 }
 
 function archive_files() {
-    tar -zpcf "$(date +%F-%H-%M)"."${backup_file}" "${backup_dir}" || {
+    tar -zpcf "${backup_name_full_name}" "${backup_dir}" || {
         printf "Cannot archive files.\nExiting.\n" >&2
         delete_lock_file
         exit 6
