@@ -32,7 +32,7 @@ backup_file_name="backup.tar.gz"
 
 Full name of backup.
 ````bash
-backup_name_full_name="$(date +%F-%H-%M)"."${backup_file_name}"
+backup_full_name="$(date +%F-%H-%M)"."${backup_file_name}"
 ````
 
 # How to use it?
